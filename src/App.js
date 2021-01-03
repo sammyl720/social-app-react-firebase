@@ -6,9 +6,12 @@ import UserContext, { useUser } from './context/UserContext/UserContext';
 import WelcomeScreen from './screens/public/WelcomeScreen';
 import ProtectedRoute from './components/ProtectedRoute';
 import Loader from './components/Loader';
+import Profile from './screens/auth/Profile';
+import Login from './screens/public/Login';
+import Signup from './screens/public/Signup';
 
 function App() {
-  const { updateUserState, loading } = useUser();
+  const { updateUserState, loading, user } = useUser();
   useEffect(() => {
     const authSubscription = auth.onAuthStateChanged((user) => {
       updateUserState(user);
@@ -18,14 +21,14 @@ function App() {
   return (
       <Router>
         <Navbar />
-        {loading ? <Loader /> :(<Switch>
-          <Route path="/" exact component={WelcomeScreen} />
-          <ProtectedRoute path="/test" component={() => (
-            <div className="container">
-              <h3>ProtectedRoute</h3>
-            </div>
-          )}/>
-        </Switch>)}
+        {loading ? <Loader /> :(
+          <Switch>
+            <Route path="/" exact component={WelcomeScreen} />
+            <ProtectedRoute path="/profile" allowAccess={() => user != null} component={Profile}/>
+            <Route path="/login" component={Login} />
+            <Route path="/signup" component={Signup} />
+          </Switch>
+        )}
       </Router>
   );
 }

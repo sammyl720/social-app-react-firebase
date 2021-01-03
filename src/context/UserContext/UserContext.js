@@ -29,8 +29,13 @@ const UserContext = ({ children }) => {
     dispatch({ type: 'SET_ERROR', payload: error})
   }
 
+  // signout user
+  const logout = () => {
+    auth.signOut();
+  }
+
   // sign up a new user
-  const createUser = async (email, password, name) => {
+  const createUser = async ({email, password, name}) => {
     setLoading(true);
     setError(null);
     try {
@@ -64,7 +69,7 @@ const UserContext = ({ children }) => {
   }
 
   // login a user
-  const loginUser = async (email, password) => {
+  const loginUser = async ({email, password}) => {
     setLoading(true);
     setError(null);
     try {
@@ -77,7 +82,7 @@ const UserContext = ({ children }) => {
     setLoading(false);
   }
   return (
-    <Context.Provider value={{ ...state, setError, setLoading, loginUser, createUser, updateUserState }}>
+    <Context.Provider value={{ ...state, setError, setLoading, loginUser, createUser, updateUserState, logout }}>
       {children}
     </Context.Provider>
   )
