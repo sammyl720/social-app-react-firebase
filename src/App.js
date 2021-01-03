@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { auth } from './firebase';
+import Navbar from './components/Layout/Navbar/Navbar';
+import UserContext, { useUser } from './context/UserContext/UserContext';
+import WelcomeScreen from './screens/public/WelcomeScreen';
+import ProtectedRoute from './components/ProtectedRoute';
+import Loader from './components/Loader';
 
 function App() {
+  const { updateUserState, loading } = useUser();
+  useEffect(() => {
+    const authSubscription = auth.onAuthStateChanged((user) => {
+      updateUserState(user);
+    })
+    return authSubscription;
+  }, [])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Router>
+        <Navbar />
+        {loading ? <Loader /> :(<Switch>
+          <Route path="/" exact component={WelcomeScreen} />
+          <ProtectedRoute path="/test" component={() => (
+            <div className="container">
+              <h3>ProtectedRoute</h3>
+            </div>
+          )}/>
+        </Switch>)}
+      </Router>
   );
 }
 
-export default App;
+const AppWrapper = () => {
+  return (
+    <UserContext>
+      <App />
+    </UserContext>
+  )
+}
+export default AppWrapper;
