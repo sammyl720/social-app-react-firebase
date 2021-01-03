@@ -11,13 +11,18 @@ import Login from './screens/public/Login';
 import Signup from './screens/public/Signup';
 
 function App() {
-  const { updateUserState, loading, user } = useUser();
+  const { updateUserState, loading, user, profile, profile_reference, retrieveUserProfile } = useUser();
   useEffect(() => {
     const authSubscription = auth.onAuthStateChanged((user) => {
       updateUserState(user);
     })
     return authSubscription;
   }, [])
+  useEffect(() => {
+  if((user && profile_reference) && !profile){
+    retrieveUserProfile()
+    }
+  }, [profile, user, profile_reference])
   return (
       <Router>
         <Navbar />

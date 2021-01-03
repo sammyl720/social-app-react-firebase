@@ -15,7 +15,6 @@ const UserContext = ({ children }) => {
     profile_reference: null,
     error: null,
     loading: false,
-    name: 'Joe'
   }
 
   const [state, dispatch] = useReducer(userReducer, initialState);
@@ -27,6 +26,9 @@ const UserContext = ({ children }) => {
 
   const setError = (error) => {
     dispatch({ type: 'SET_ERROR', payload: error})
+    setTimeout(() => {
+      dispatch({ type: 'SET_ERROR', payload: null })
+    }, 5000)
   }
 
   // signout user
@@ -57,13 +59,18 @@ const UserContext = ({ children }) => {
   // update a user in context
   const updateUserState = user => {
     setLoading(true);
-    dispatch({ type: 'SET_USER', payload: user });
+    if(user){
+      dispatch({ type: 'SET_USER', payload: user });
+      setUserProfileDbRef(user.uid);
+    } else {
+      dispatch({ type: 'RESET' });
+    }
     setLoading(false);
   }
 
   // get a user db profile reference
-  const setUserProfileDbRef = uid => {
-    const profileRef = userCollection.doc(uid);
+  const setUserProfileDbRef = (uid) => {
+    const profileRef = userCollection.doc(uid).path;
     dispatch({ type: 'SET_PROFILE_REF', payload: profileRef});
     return profileRef;
   }
@@ -73,16 +80,25 @@ const UserContext = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const { user } = await auth.signInWithEmailAndPassword(email, password);
-      // create profile reference to write data
-      setUserProfileDbRef(user.uid);
+      await auth.signInWithEmailAndPassword(email, password);
     } catch (error) {
       setError(error.message || error);
     }
     setLoading(false);
   }
+
+  const retrieveUserProfile = async () => {
+    try {
+      let ref = db.doc(state.profile_reference);
+      const doc = await ref.get();
+      const profile = doc.data();
+      dispatch({ type: 'SET_PROFILE', payload: profile });
+    } catch (error) {
+      setError(error.message || error);
+    }
+  }
   return (
-    <Context.Provider value={{ ...state, setError, setLoading, loginUser, createUser, updateUserState, logout }}>
+    <Context.Provider value={{ ...state, setError, setLoading, loginUser, createUser, updateUserState, logout, retrieveUserProfile }}>
       {children}
     </Context.Provider>
   )

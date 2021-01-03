@@ -6,7 +6,7 @@ const Navbar = () => {
   const { user, logout } = useUser();
   return (
     <div className={classes.navbar}>
-      <i class="fab fa-pied-piper-pp"></i>
+      <i className="fab fa-pied-piper-pp"></i>
       <div>
         <Link to='/' className={classes.link}>Home</Link>
         { user ? (<>

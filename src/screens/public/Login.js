@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useUser } from '../../context/UserContext/UserContext';
+import Loader from '../../components/Loader';
 
 const Login = ({ history }) => {
-  const { user } = useUser();
+  const { user, loginUser, loading, error } = useUser();
   useEffect(() => {
     if(user){
       history.push('/profile');
@@ -23,12 +24,18 @@ const Login = ({ history }) => {
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(creds);
+    e.preventDefault();
+    loginUser(creds);
   }
   const [visible, setVisible] = useState(false);
+  if(loading) return <Loader />
   return (
     <div className='flex-fill'>
+      {error && (
+        <div className="alert alert-danger my-2">
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="card d-flex flex-column justify-content-center text-center p-3">
         <div className="card-body">
         <h1 className="card-title text-success mb-5">Login</h1>
