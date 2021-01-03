@@ -5,4 +5,11 @@
   align-items: center;
   justify-content:center;
   flex-direction: column;
+  position: relative;
+}
+
+.close{
+  position: absolute;
+  top: 1rem;
+  right:1rem;
 }

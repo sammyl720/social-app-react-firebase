@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { auth } from './firebase';
 import Navbar from './components/Layout/Navbar/Navbar';
 import UserContext, { useUser } from './context/UserContext/UserContext';
+import PostContext from './context/PostContext/PostContext'
 import WelcomeScreen from './screens/public/WelcomeScreen';
 import ProtectedRoute from './components/ProtectedRoute';
 import Loader from './components/Loader';
@@ -41,7 +42,9 @@ function App() {
 const AppWrapper = () => {
   return (
     <UserContext>
-      <App />
+      <PostContext>
+        <App />
+      </PostContext>
     </UserContext>
   )
 }

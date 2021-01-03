@@ -45,7 +45,7 @@ const Signup = ({ history }) => {
          </div>
          <div className="input-group mb-2">
            <span className="input-group-text"><i className="fas fa-user"></i></span>
-           <input type="text" pattern="\w{4,}" name='name' value={creds.name} onChange={updateCredField} className="form-control" placeholder="Name" required />
+           <input type="text" pattern="[\w ]{4,}" name='name' value={creds.name} onChange={updateCredField} className="form-control" placeholder="Name" required />
          </div>
          <div className="input-group mb-2">
            <span className="input-group-text"><i className="fas fa-lock"></i></span>

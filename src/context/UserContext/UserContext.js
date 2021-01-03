@@ -1,5 +1,6 @@
 import React, { useContext, createContext, useReducer } from 'react'
 import { auth, db } from '../../firebase';
+import firebase from 'firebase'
 import userReducer from './userReducer';
 
 // database reference
@@ -31,6 +32,18 @@ const UserContext = ({ children }) => {
     }, 5000)
   }
 
+  // add a user post
+  const addUserPost = async (postPath) => {
+    try {
+      const userPostsRef = await db.doc(state.profile_reference);
+      const newPost = await userPostsRef.set({
+        posts: firebase.firestore.FieldValue.arrayUnion(postPath)
+      }, { merge: true })
+      console.log(postPath);
+    } catch (error) {
+      setError(error.message || error)
+    }
+  }
   // signout user
   const logout = () => {
     auth.signOut();
@@ -46,9 +59,13 @@ const UserContext = ({ children }) => {
       }
       const { user } = await auth.createUserWithEmailAndPassword(email, password);
       const profileRef = setUserProfileDbRef(user.uid);
-      await profileRef.set({
+      await db.doc(profileRef).set({
         name,
-        uid: user.uid
+        username: name.replace(/[\W ]/gi, ''),
+        uid: user.uid,
+        posts: [],
+        following: [],
+        followers: []
       })
     } catch (error) {
       setError(error.message || error);
@@ -98,7 +115,7 @@ const UserContext = ({ children }) => {
     }
   }
   return (
-    <Context.Provider value={{ ...state, setError, setLoading, loginUser, createUser, updateUserState, logout, retrieveUserProfile }}>
+    <Context.Provider value={{ ...state, setError, setLoading, loginUser, createUser, updateUserState, logout, retrieveUserProfile, addUserPost }}>
       {children}
     </Context.Provider>
   )
