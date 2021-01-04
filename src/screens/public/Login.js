@@ -4,9 +4,9 @@ import { useUser } from '../../context/UserContext/UserContext';
 import Loader from '../../components/Loader';
 
 const Login = ({ history }) => {
-  const { user, loginUser, loading, error } = useUser();
+  const { user, loginUser, loading, error, profile } = useUser();
   useEffect(() => {
-    if(user){
+    if(user && !loading && profile){
       history.push('/profile');
     }
   }, [user])

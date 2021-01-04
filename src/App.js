@@ -10,6 +10,7 @@ import Loader from './components/Loader';
 import Profile from './screens/auth/Profile';
 import Login from './screens/public/Login';
 import Signup from './screens/public/Signup';
+import Feed from './screens/auth/Feed';
 
 function App() {
   const { updateUserState, loading, user, profile, profile_reference, retrieveUserProfile } = useUser();
@@ -31,6 +32,7 @@ function App() {
           <Switch>
             <Route path="/" exact component={WelcomeScreen} />
             <ProtectedRoute path="/profile" allowAccess={() => user != null} component={Profile}/>
+            <ProtectedRoute path="/feed" allowAccess={() => user != null} component={Feed}/>
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
           </Switch>
