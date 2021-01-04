@@ -30,7 +30,7 @@ const Login = ({ history }) => {
   const [visible, setVisible] = useState(false);
   if(loading) return <Loader />
   return (
-    <div className='flex-fill'>
+    <div className='flexfill'>
       {error && (
         <div className="alert alert-danger my-2">
           {error}

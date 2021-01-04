@@ -24,14 +24,16 @@ const CreatePost = ({ setClose }) => {
     return <Loader />
   }
   return (
-    <div className='flex-fill'>
-      <div className="close" onClick={setClose}>Close</div>
-      <form onSubmit={handlePostSubmit} className="card">
-        <div className="card-body">
+    <div className='modal mt-1 d-flex justify-content-center align-items-center'>
+      <form onSubmit={handlePostSubmit} className="card row p-4">
+        <div className="col-sm-2 offset-sm-10 d-flex justify-content-end">
+          <i className="fas fa-times" onClick={setClose}></i>
+        </div>
+        <div className="card-body col-sm-12">
           <input type="text" placeholder='what on your mind?' className="form-control" value={post} onChange={handleChange} pattern='.{6,}' required/>
         </div>
-        <div className="d-grid">
-          <button type="submit" className="btn btn-primary">
+        <div className='col-sm-8 offset-sm-2 my-2'>
+          <button type="submit" className="btn btn-primary" style={{width:'100%'}}>
             <i className="fas fa-paper-plane"></i>
           </button>
         </div>

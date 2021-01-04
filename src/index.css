@@ -1,4 +1,4 @@
-.flex-fill{
+.flexfill{
   width: 100%;
   height: calc(100vh - 40px);
   display: flex;
@@ -12,4 +12,69 @@
   position: absolute;
   top: 1rem;
   right:1rem;
+}
+
+.modal{
+  position: absolute;
+  top: 50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  z-index: 100;
+  padding:1rem;
+}
+
+.avatar{
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border:1px solid black;
+  display: inline;
+  object-fit: cover;
+  margin-right: 0.75rem;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.bar{
+  padding: 0.5rem 0.75rem;
+  border-radius: 200px;
+  background-color: #f5f4f4;
+  box-shadow: 0 0 5px rgba(0,0,0,0.15);
+  margin: 0 0.5rem;
+  display:flex;
+  align-items: center;
+  justify-content:center;
+  flex-direction: column;
+}
+
+.btmBtn{
+
+}
+.bottomBtn{ 
+  position: fixed;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  bottom: 1rem; 
+  right:1rem;
+  width:50px;
+  height: 50px;
+  border-radius:50%;
+  font-size: 1rem;
+  background-color: #00303f67;
+  border:none;
+  z-index: 200;
+}
+
+.bottomBtn:focus{
+  outline:none;
+}
+
+@media (min-width: 768px){
+  .bar{
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .bar > strong{
+    margin-left: 0.25rem;
+  }
 }
