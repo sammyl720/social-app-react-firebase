@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { useUser } from '../../context/UserContext/UserContext';
 import Loader from '../../components/Loader';
 const Signup = ({ history }) => {
-  const { user, createUser, loading, error } = useUser();
+  const { user, createUser, loading, error, profile } = useUser();
   useEffect(() => {
-    if(user){
+    if(user && !loading && profile){
       history.push('/profile');
     }
-  }, [user])
+  }, [user, loading, profile])
   const [creds, setCreds] = useState({
     email: '',
     name: '',

@@ -1,5 +1,5 @@
 import React, { useContext, createContext, useReducer } from 'react'
-import { auth, db } from '../../firebase';
+import { auth, db, storage } from '../../firebase';
 import firebase from 'firebase'
 import userReducer from './userReducer';
 
@@ -63,10 +63,13 @@ const UserContext = ({ children }) => {
         name,
         username: name.replace(/[\W ]/gi, ''),
         uid: user.uid,
+        email,
+        profile_img: process.env.PUBLIC_URL + 'profile-img.jpg',
         posts: [],
         following: [],
         followers: []
       })
+      retrieveUserProfile();
     } catch (error) {
       setError(error.message || error);
     }
@@ -114,8 +117,34 @@ const UserContext = ({ children }) => {
       setError(error.message || error);
     }
   }
+
+  const updateUserProfileImg = async (img) => {
+    setLoading(true);
+    try {
+      const { uid } = state.user;
+      if(!uid) {
+        throw new Error('INSUFFICIENT PERMISION');
+      }
+      if(!img){
+        throw new Error('NO IMAGE PROVIDED')
+      }
+      const storageRef = storage.ref(`${uid}/profile-img`);
+      await storageRef.put(img);
+      const imgUrl = await storageRef.getDownloadURL();
+      const userPostsRef = await db.doc(state.profile_reference);
+      await userPostsRef.set({
+        profile_img: imgUrl
+      }, { merge: true })
+      await retrieveUserProfile();
+      setLoading(false);
+      return imgUrl;
+    } catch (error) {
+      setError(error.message || error);
+      console.error(error);
+    }
+  }
   return (
-    <Context.Provider value={{ ...state, setError, setLoading, loginUser, createUser, updateUserState, logout, retrieveUserProfile, addUserPost }}>
+    <Context.Provider value={{ ...state, setError, setLoading, loginUser, createUser, updateUserState, logout, retrieveUserProfile, addUserPost, updateUserProfileImg }}>
       {children}
     </Context.Provider>
   )

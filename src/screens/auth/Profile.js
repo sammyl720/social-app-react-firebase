@@ -4,25 +4,29 @@ import { usePosts } from '../../context/PostContext/PostContext';
 import PostList from '../../components/Posts/PostList'
 import CreatePost from '../../components/CreatePost';
 import ImageSelector from '../../components/ImageSelector';
+import Loader from '../../components/Loader';
 
 const Profile = () => {
-  const { user, profile } = useUser();
+  const { user, profile, updateUserProfileImg, loading } = useUser();
   const { retrieveUserPosts, posts } = usePosts();
   const [openFileSystem, setOpenFileSystem] = useState();
-  const handleProfileImageUpdate = (e) => {
+  const [postOpen, setPostOpen] = useState(false);
+  const handleProfileImageUpdate = async (e) => {
     console.log(e.target.files[0]);
+    const img = e.target.files[0];
+    updateUserProfileImg(img);
     setOpenFileSystem(false)
   }
   useEffect(() => {
     retrieveUserPosts()
   }, [])
-  const [postOpen, setPostOpen] = useState(false);
+  if(loading) return <Loader />
   return (
-    <div className="container d-flex align-items-center justify-content-center flex-column">
+    <div className="container d-flex align-items-center justify-content-center flex-column mt-4">
       <ImageSelector openFileSystem={openFileSystem} onFileChange={handleProfileImageUpdate} />
       <header className="header d-flex align-items-center justify-content-center flex-column my-2">
         <div className="profile-img" onClick={() => setOpenFileSystem(true)}>
-          <img src={profile.profile_img || process.env.PUBLIC_URL + 'profile-img.jpg'} alt="profile img" style={{ width: '5rem', height: '5rem', borderRadius: '50%'}} />
+          <img src={profile?.profile_img || process.env.PUBLIC_URL + 'profile-img.jpg'} alt="profile img" style={{ width: '5rem', height: '5rem', borderRadius: '50%'}} />
         </div>
         <h3>{profile.name}</h3>
         <div className="profile-details d-flex align-items-center justify-content-evenly">
